@@ -1,12 +1,4 @@
 {
-  "name": "example-server",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/body-parser": "^1.19.2",
-    "typescript": "^4.9.5"
-  },
   "dependencies": {
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
@@ -15,12 +7,21 @@
     "yaschema": "^2.0.2",
     "yaschema-api": "^0.0.0-alpha.0"
   },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2",
+    "typescript": "^4.9.5"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "name": "example-server",
   "scripts": {
     "build": "tsc",
-    "start": "node ./bin",
-    "ping": "curl -i 'http://localhost:8080/ping' --header 'Content-Type: application/json' --request POST --data '{ \"echo\": \"Hello World\" }' && echo",
-    "cause-validation-error": "curl -i 'http://localhost:8080/ping' --header 'Content-Type: application/json' --request POST --data '{ \"echo\": 3.14 }' && echo",
+    "cause-error": "curl -i 'http://localhost:8080/error' --header 'Content-Type: application/json' --request POST --data '{ \"echo\": \"Hello World\" }' && echo",
     "cause-exception": "curl -i 'http://localhost:8080/exception' --header 'Content-Type: application/json' --request POST --data '{ \"echo\": \"Hello World\" }' && echo",
-    "cause-error": "curl -i 'http://localhost:8080/error' --header 'Content-Type: application/json' --request POST --data '{ \"echo\": \"Hello World\" }' && echo"
-  }
+    "cause-validation-error": "curl -i 'http://localhost:8080/ping' --header 'Content-Type: application/json' --request POST --data '{ \"echo\": 3.14 }' && echo",
+    "check-array-query": "curl -i 'http://localhost:8080/array-query?values[]=one&values[]=2&values[]=true' --header 'Content-Type: application/json' --request GET && echo",
+    "ping": "curl -i 'http://localhost:8080/ping' --header 'Content-Type: application/json' --request POST --data '{ \"echo\": \"Hello World\" }' && echo",
+    "start": "node ./bin"
+  },
+  "version": "1.0.0"
 }

@@ -8,7 +8,11 @@ import { getHttpApiHandlerWrapper } from '../config/http-api-handler-wrapper';
 import { getDefaultRequestValidationMode, getDefaultResponseValidationMode } from '../config/validation-mode';
 import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname';
 
-const anyStringSerializableTypeSchema = schema.oneOf3(schema.string(), schema.number(), schema.boolean());
+const anyStringSerializableTypeSchema = schema.oneOf3(
+  schema.number().setAllowedSerializationForms(['number', 'string']),
+  schema.boolean().setAllowedSerializationForms(['boolean', 'string']),
+  schema.string()
+);
 
 const anyReqHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema);
 const anyReqParamsSchema = schema.record(schema.string(), anyStringSerializableTypeSchema);
