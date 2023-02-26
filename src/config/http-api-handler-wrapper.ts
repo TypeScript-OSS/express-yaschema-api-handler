@@ -3,9 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 
 type AsyncRequestHandler = (req: Request, res: Response, next: NextFunction) => Promise<void | Response<any, Record<string, any>>>;
 
-type AsyncRequestHandlerWrapper = (handler: AsyncRequestHandler) => AsyncRequestHandler;
+type HttpApiHandlerWrapper = (handler: AsyncRequestHandler) => AsyncRequestHandler;
 
-let globalAsyncHandlerWrapper: AsyncRequestHandlerWrapper =
+let globalHttpApiHandlerWrapper: HttpApiHandlerWrapper =
   (handler: AsyncRequestHandler): AsyncRequestHandler =>
   async (req, res, next) => {
     try {
@@ -15,8 +15,8 @@ let globalAsyncHandlerWrapper: AsyncRequestHandlerWrapper =
     }
   };
 
-export const getAsyncHandlerWrapper = () => globalAsyncHandlerWrapper;
+export const getHttpApiHandlerWrapper = () => globalHttpApiHandlerWrapper;
 
-export const setAsyncHandlerWrapper = (wrapper: AsyncRequestHandlerWrapper) => {
-  globalAsyncHandlerWrapper = wrapper;
+export const setHttpApiHandlerWrapper = (wrapper: HttpApiHandlerWrapper) => {
+  globalHttpApiHandlerWrapper = wrapper;
 };

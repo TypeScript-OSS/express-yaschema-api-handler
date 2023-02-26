@@ -1,2 +1,2 @@
-export * from './async-handler-wrapper';
+export * from './http-api-handler-wrapper';
 export * from './validation-mode';

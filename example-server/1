@@ -1,15 +1,0 @@
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    41  100    16  100    25   2423   3787 --:--:-- --:--:-- --:--:-- 20500
-HTTP/1.1 400 Bad Request
-X-Powered-By: Express
-Content-Type: application/json; charset=utf-8
-Content-Length: 16
-ETag: W/"10-cwPPxdD83hqU8I7CQlX+klTi9Bw"
-Date: Fri, 24 Feb 2023 05:40:25 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-
-PONG Hello World  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (7) Couldn't connect to server

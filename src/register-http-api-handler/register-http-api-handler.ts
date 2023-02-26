@@ -4,7 +4,7 @@ import type { SingleOrArray, ValidationMode } from 'yaschema';
 import { schema } from 'yaschema';
 import type { AnyStringSerializableType, HttpApi, HttpMethod, ResponseSchemas } from 'yaschema-api';
 
-import { getAsyncHandlerWrapper } from '../config/async-handler-wrapper';
+import { getHttpApiHandlerWrapper } from '../config/http-api-handler-wrapper';
 import { getDefaultRequestValidationMode, getDefaultResponseValidationMode } from '../config/validation-mode';
 import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname';
 
@@ -16,11 +16,11 @@ const anyReqQuerySchema = schema.record(
   schema.string(),
   schema.oneOf(anyStringSerializableTypeSchema, schema.array({ items: anyStringSerializableTypeSchema }))
 );
-const anyReqBodySchema = schema.any();
+const anyReqBodySchema = schema.any().allowNull().optional();
 
 const anyResStatusSchema = schema.number();
 const anyResHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema);
-const anyResBodySchema = schema.any();
+const anyResBodySchema = schema.any().allowNull().optional();
 
 export interface HttpApiHandlerOptions {
   requestValidationMode?: ValidationMode;
@@ -76,35 +76,35 @@ export const registerHttpApiHandler = <
     ]);
 
     if (requestValidationMode !== 'none') {
-      if (reqHeaders?.error !== undefined) {
+      if (reqHeaders.error !== undefined) {
         if (requestValidationMode === 'hard') {
           return res.status(StatusCodes.BAD_REQUEST).send('Request header validation error');
         } else {
-          console.debug(req.url, 'request header validation error', reqHeaders?.error);
+          console.debug(req.url, 'request header validation error', reqHeaders.error);
         }
       }
 
-      if (reqParams?.error !== undefined) {
+      if (reqParams.error !== undefined) {
         if (requestValidationMode === 'hard') {
           return res.status(StatusCodes.BAD_REQUEST).send('Request param validation error');
         } else {
-          console.debug(req.url, 'request param validation error', reqParams?.error);
+          console.debug(req.url, 'request param validation error', reqParams.error);
         }
       }
 
-      if (reqQuery?.error !== undefined) {
+      if (reqQuery.error !== undefined) {
         if (requestValidationMode === 'hard') {
           return res.status(StatusCodes.BAD_REQUEST).send('Request query validation error');
         } else {
-          console.debug(req.url, 'request query validation error', reqQuery?.error);
+          console.debug(req.url, 'request query validation error', reqQuery.error);
         }
       }
 
-      if (reqBody?.error !== undefined) {
+      if (reqBody.error !== undefined) {
         if (requestValidationMode === 'hard') {
           return res.status(StatusCodes.BAD_REQUEST).send('Request body validation error');
         } else {
-          console.debug(req.url, 'request body validation error', reqBody?.error);
+          console.debug(req.url, 'request body validation error', reqBody.error);
         }
       }
     }
@@ -138,27 +138,27 @@ export const registerHttpApiHandler = <
         ]);
 
         if (responseValidationMode !== 'none') {
-          if (resStatus?.error !== undefined) {
+          if (resStatus.error !== undefined) {
             if (responseValidationMode === 'hard') {
               return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
             } else {
-              console.debug(req.url, 'response status validation error', resStatus?.error);
+              console.debug(req.url, 'response status validation error', resStatus.error);
             }
           }
 
-          if (resHeaders?.error !== undefined) {
+          if (resHeaders.error !== undefined) {
             if (responseValidationMode === 'hard') {
               return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
             } else {
-              console.debug(req.url, 'response header validation error', resHeaders?.error);
+              console.debug(req.url, 'response header validation error', resHeaders.error);
             }
           }
 
-          if (resBody?.error !== undefined) {
+          if (resBody.error !== undefined) {
             if (responseValidationMode === 'hard') {
               return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
             } else {
-              console.debug(req.url, 'response body validation error', resBody?.error);
+              console.debug(req.url, 'response body validation error', resBody.error);
             }
           }
         }
@@ -203,7 +203,7 @@ export const registerHttpApiHandler = <
   const relativizedUrl = getUrlPathnameUsingRouteType(api.routeType, api.url);
 
   const methodName = expressHandlersByHttpMethod[api.method];
-  const asyncHandlerWrapper = getAsyncHandlerWrapper();
+  const asyncHandlerWrapper = getHttpApiHandlerWrapper();
   const handlers: RequestHandler[] = [...middlewares, asyncHandlerWrapper(expressHandler)];
   app[methodName](relativizedUrl, ...handlers);
 };
