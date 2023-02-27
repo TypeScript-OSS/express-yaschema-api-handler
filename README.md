@@ -8,7 +8,9 @@ Express support for handling APIs declared using yaschema-api.
 ## Basic Example
 
 ```typescript
-export const POST = makeHttpApi({
+// API schema and metadata
+// You'll typically define this in a separate package shared by your server and clients
+export const postPing = makeHttpApi({
   method: 'POST',
   routeType: 'rest',
   url: '/ping',
@@ -25,15 +27,17 @@ export const POST = makeHttpApi({
     }
   }
 });
+```
 
-…
-
-export const register = (app: Express) => {
-  registerHttpApiHandler(app, POST, {}, async ({ express: _express, input, output }) => {
+```typescript
+// Register the API handler with Express
+export const register = (app: Express) =>
+  registerHttpApiHandler(app, postPing, {}, async ({ express: _express, input, output }) => {
     output.success(200, { headers: {}, body: (input.body.echo?.length ?? 0) > 0 ? `PONG ${input.body.echo ?? ''}` : 'PONG' });
   });
-};
 ```
+
+The options object passed to `registerHttpApiHandler` lets you override the validation mode and/or specify middleware.
 
 ## Thanks
 
