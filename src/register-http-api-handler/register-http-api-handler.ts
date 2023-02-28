@@ -188,7 +188,7 @@ export const registerHttpApiHandler = <
           }
         }
 
-        return res.status(status).send(resBody.serialized);
+        return res.status(status).send(JSON.stringify(resBody.serialized));
       };
 
     const output = {
