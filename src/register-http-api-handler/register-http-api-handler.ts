@@ -11,6 +11,7 @@ import type {
   GenericHttpApi,
   HttpApi,
   HttpMethod,
+  OptionalIfPossiblyUndefined,
   ResponseSchemas
 } from 'yaschema-api';
 import { checkRequestValidation, checkResponseValidation } from 'yaschema-api';
@@ -76,8 +77,14 @@ export const registerHttpApiHandler = <
       body: ReqBodyT;
     };
     output: {
-      success: (status: ResStatusT, value: { headers: ResHeadersT; body: ResBodyT }) => void;
-      failure: (status: ErrResStatusT, value: { headers: ErrResHeadersT; body: ErrResBodyT }) => void;
+      success: (
+        status: ResStatusT,
+        value: OptionalIfPossiblyUndefined<'headers', ResHeadersT> & OptionalIfPossiblyUndefined<'body', ResBodyT>
+      ) => void;
+      failure: (
+        status: ErrResStatusT,
+        value: OptionalIfPossiblyUndefined<'headers', ErrResHeadersT> & OptionalIfPossiblyUndefined<'body', ErrResBodyT>
+      ) => void;
     };
   }) => Promise<void>
 ) => {
@@ -131,7 +138,10 @@ export const registerHttpApiHandler = <
       <ResStatusT extends AnyStatus, ResHeadersT extends AnyHeaders, ResBodyT extends AnyBody>(
         schemas: ResponseSchemas<ResStatusT, ResHeadersT, ResBodyT>
       ) =>
-      async (status: ResStatusT, { headers, body }: { headers: ResHeadersT; body: ResBodyT }) => {
+      async (
+        status: ResStatusT,
+        { headers, body }: OptionalIfPossiblyUndefined<'headers', ResHeadersT> & OptionalIfPossiblyUndefined<'body', ResBodyT>
+      ) => {
         if (alreadyOutput) {
           console.warn('Multiple outputs attempted for', req.url);
           return;
@@ -140,8 +150,10 @@ export const registerHttpApiHandler = <
 
         const [resStatus, resHeaders, resBody] = await Promise.all([
           await (schemas.status ?? anyResStatusSchema).serializeAsync(status, { validation: responseValidationMode }),
-          await (schemas.headers ?? anyResHeadersSchema).serializeAsync(headers, { validation: responseValidationMode }),
-          await (schemas.body ?? anyResBodySchema).serializeAsync(body, { validation: responseValidationMode })
+          await (schemas.headers ?? anyResHeadersSchema).serializeAsync((headers ?? {}) as ResHeadersT, {
+            validation: responseValidationMode
+          }),
+          await (schemas.body ?? anyResBodySchema).serializeAsync(body as ResBodyT, { validation: responseValidationMode })
         ]);
 
         if (responseValidationMode !== 'none') {

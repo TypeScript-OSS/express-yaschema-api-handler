@@ -7,7 +7,6 @@ import * as api from '../api';
 export const register = (app: Express) =>
   registerHttpApiHandler(app, api.arrayQuery.GET, {}, async ({ express: _express, input, output }) => {
     output.failure(StatusCodes.BAD_REQUEST, {
-      headers: {},
-      body: input.query.values.map((v) => `(${typeof v}) ${v}`).join(', ')
+      body: input.query.values.map((v) => `(${typeof v}) ${String(v)}`).join(', ')
     });
   });
