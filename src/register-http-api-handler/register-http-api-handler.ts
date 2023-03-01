@@ -92,10 +92,10 @@ export const registerHttpApiHandler = <
     const express = { req, res, next };
 
     const [reqHeaders, reqParams, reqQuery, reqBody] = await Promise.all([
-      await (api.schemas.request.headers ?? anyReqHeadersSchema).deserializeAsync(req.headers, { validation: requestValidationMode }),
-      await (api.schemas.request.params ?? anyReqParamsSchema).deserializeAsync(req.params, { validation: requestValidationMode }),
-      await (api.schemas.request.query ?? anyReqQuerySchema).deserializeAsync(req.query, { validation: requestValidationMode }),
-      await (api.schemas.request.body ?? anyReqBodySchema).deserializeAsync(req.body, { validation: requestValidationMode })
+      (api.schemas.request.headers ?? anyReqHeadersSchema).deserializeAsync(req.headers, { validation: requestValidationMode }),
+      (api.schemas.request.params ?? anyReqParamsSchema).deserializeAsync(req.params, { validation: requestValidationMode }),
+      (api.schemas.request.query ?? anyReqQuerySchema).deserializeAsync(req.query, { validation: requestValidationMode }),
+      (api.schemas.request.body ?? anyReqBodySchema).deserializeAsync(req.body, { validation: requestValidationMode })
     ]);
 
     if (requestValidationMode !== 'none') {
@@ -149,11 +149,11 @@ export const registerHttpApiHandler = <
         alreadyOutput = true;
 
         const [resStatus, resHeaders, resBody] = await Promise.all([
-          await (schemas.status ?? anyResStatusSchema).serializeAsync(status, { validation: responseValidationMode }),
-          await (schemas.headers ?? anyResHeadersSchema).serializeAsync((headers ?? {}) as ResHeadersT, {
+          (schemas.status ?? anyResStatusSchema).serializeAsync(status, { validation: responseValidationMode }),
+          (schemas.headers ?? anyResHeadersSchema).serializeAsync((headers ?? {}) as ResHeadersT, {
             validation: responseValidationMode
           }),
-          await (schemas.body ?? anyResBodySchema).serializeAsync(body as ResBodyT, { validation: responseValidationMode })
+          (schemas.body ?? anyResBodySchema).serializeAsync(body as ResBodyT, { validation: responseValidationMode })
         ]);
 
         if (responseValidationMode !== 'none') {
