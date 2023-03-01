@@ -1,10 +1,23 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import type { SingleOrArray, ValidationMode } from 'yaschema';
+import type { ValidationMode } from 'yaschema';
 import { schema } from 'yaschema';
-import type { AnyStringSerializableType, HttpApi, HttpMethod, ResponseSchemas } from 'yaschema-api';
+import type {
+  AnyBody,
+  AnyHeaders,
+  AnyParams,
+  AnyQuery,
+  AnyStatus,
+  GenericHttpApi,
+  HttpApi,
+  HttpMethod,
+  ResponseSchemas
+} from 'yaschema-api';
+import { checkRequestValidation, checkResponseValidation } from 'yaschema-api';
 
 import { getHttpApiHandlerWrapper } from '../config/http-api-handler-wrapper';
+import { triggerOnRequestValidationErrorHandler } from '../config/on-request-validation-error';
+import { triggerOnResponseValidationErrorHandler } from '../config/on-response-validation-error';
 import { getDefaultRequestValidationMode, getDefaultResponseValidationMode } from '../config/validation-mode';
 import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname';
 
@@ -14,16 +27,15 @@ const anyStringSerializableTypeSchema = schema.oneOf3(
   schema.string()
 );
 
-const anyReqHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema);
-const anyReqParamsSchema = schema.record(schema.string(), anyStringSerializableTypeSchema);
-const anyReqQuerySchema = schema.record(
-  schema.string(),
-  schema.oneOf(anyStringSerializableTypeSchema, schema.array({ items: anyStringSerializableTypeSchema }))
-);
+const anyReqHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema).optional();
+const anyReqParamsSchema = schema.record(schema.string(), anyStringSerializableTypeSchema).optional();
+const anyReqQuerySchema = schema
+  .record(schema.string(), schema.oneOf(anyStringSerializableTypeSchema, schema.array({ items: anyStringSerializableTypeSchema })))
+  .optional();
 const anyReqBodySchema = schema.any().allowNull().optional();
 
 const anyResStatusSchema = schema.number();
-const anyResHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema);
+const anyResHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema).optional();
 const anyResBodySchema = schema.any().allowNull().optional();
 
 export interface HttpApiHandlerOptions {
@@ -33,16 +45,16 @@ export interface HttpApiHandlerOptions {
 }
 
 export const registerHttpApiHandler = <
-  ReqHeadersT extends Record<string, AnyStringSerializableType>,
-  ReqParamsT extends Record<string, AnyStringSerializableType>,
-  ReqQueryT extends Record<string, SingleOrArray<AnyStringSerializableType>>,
-  ReqBodyT,
-  ResStatusT extends number,
-  ResHeadersT extends Record<string, AnyStringSerializableType>,
-  ResBodyT,
-  ErrResStatusT extends number,
-  ErrResHeadersT extends Record<string, AnyStringSerializableType>,
-  ErrResBodyT
+  ReqHeadersT extends AnyHeaders,
+  ReqParamsT extends AnyParams,
+  ReqQueryT extends AnyQuery,
+  ReqBodyT extends AnyBody,
+  ResStatusT extends AnyStatus,
+  ResHeadersT extends AnyHeaders,
+  ResBodyT extends AnyBody,
+  ErrResStatusT extends AnyStatus,
+  ErrResHeadersT extends AnyHeaders,
+  ErrResBodyT extends AnyBody
 >(
   app: Express,
   api: HttpApi<ReqHeadersT, ReqParamsT, ReqQueryT, ReqBodyT, ResStatusT, ResHeadersT, ResBodyT, ErrResStatusT, ErrResHeadersT, ErrResBodyT>,
@@ -80,36 +92,29 @@ export const registerHttpApiHandler = <
     ]);
 
     if (requestValidationMode !== 'none') {
-      if (reqHeaders.error !== undefined) {
-        if (requestValidationMode === 'hard') {
-          return res.status(StatusCodes.BAD_REQUEST).send('Request header validation error');
-        } else {
-          console.debug(req.url, 'request header validation error', reqHeaders.error);
-        }
+      const checkedRequestValidation = checkRequestValidation({
+        reqHeaders,
+        reqParams,
+        reqQuery,
+        reqBody,
+        validationMode: requestValidationMode
+      });
+      if (!checkedRequestValidation.ok || checkedRequestValidation.hadSoftValidationError) {
+        triggerOnRequestValidationErrorHandler({
+          api: api as any as GenericHttpApi,
+          req: {
+            headers: reqHeaders.deserialized as ReqHeadersT,
+            params: reqParams.deserialized as ReqParamsT,
+            query: reqQuery.deserialized as ReqQueryT,
+            body: reqBody.deserialized as ReqBodyT
+          },
+          expressReq: express.req,
+          invalidPart: checkedRequestValidation.invalidPart,
+          validationError: checkedRequestValidation.validationError
+        });
       }
-
-      if (reqParams.error !== undefined) {
-        if (requestValidationMode === 'hard') {
-          return res.status(StatusCodes.BAD_REQUEST).send('Request param validation error');
-        } else {
-          console.debug(req.url, 'request param validation error', reqParams.error);
-        }
-      }
-
-      if (reqQuery.error !== undefined) {
-        if (requestValidationMode === 'hard') {
-          return res.status(StatusCodes.BAD_REQUEST).send('Request query validation error');
-        } else {
-          console.debug(req.url, 'request query validation error', reqQuery.error);
-        }
-      }
-
-      if (reqBody.error !== undefined) {
-        if (requestValidationMode === 'hard') {
-          return res.status(StatusCodes.BAD_REQUEST).send('Request body validation error');
-        } else {
-          console.debug(req.url, 'request body validation error', reqBody.error);
-        }
+      if (!checkedRequestValidation.ok) {
+        return res.status(StatusCodes.BAD_REQUEST).send('Request header validation error');
       }
     }
 
@@ -123,7 +128,7 @@ export const registerHttpApiHandler = <
     let alreadyOutput = false;
 
     const makeOutputHandler =
-      <ResStatusT extends number, ResHeadersT extends Record<string, AnyStringSerializableType>, ResBodyT>(
+      <ResStatusT extends AnyStatus, ResHeadersT extends AnyHeaders, ResBodyT extends AnyBody>(
         schemas: ResponseSchemas<ResStatusT, ResHeadersT, ResBodyT>
       ) =>
       async (status: ResStatusT, { headers, body }: { headers: ResHeadersT; body: ResBodyT }) => {
@@ -135,35 +140,34 @@ export const registerHttpApiHandler = <
 
         const [resStatus, resHeaders, resBody] = await Promise.all([
           await (schemas.status ?? anyResStatusSchema).serializeAsync(status, { validation: responseValidationMode }),
-          await (schemas.headers ?? anyResHeadersSchema).serializeAsync(headers, {
-            validation: responseValidationMode
-          }),
+          await (schemas.headers ?? anyResHeadersSchema).serializeAsync(headers, { validation: responseValidationMode }),
           await (schemas.body ?? anyResBodySchema).serializeAsync(body, { validation: responseValidationMode })
         ]);
 
         if (responseValidationMode !== 'none') {
-          if (resStatus.error !== undefined) {
-            if (responseValidationMode === 'hard') {
-              return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
-            } else {
-              console.debug(req.url, 'response status validation error', resStatus.error);
-            }
+          const checkedResponseValidation = checkResponseValidation({
+            resStatus,
+            resHeaders,
+            resBody,
+            validationMode: responseValidationMode
+          });
+          if (!checkedResponseValidation.ok || checkedResponseValidation.hadSoftValidationError) {
+            triggerOnResponseValidationErrorHandler({
+              api: api as any as GenericHttpApi,
+              req: {
+                headers: reqHeaders.deserialized as ReqHeadersT,
+                params: reqParams.deserialized as ReqParamsT,
+                query: reqQuery.deserialized as ReqQueryT,
+                body: reqBody.deserialized as ReqBodyT
+              },
+              expressReq: express.req,
+              res: { status, headers, body },
+              invalidPart: checkedResponseValidation.invalidPart,
+              validationError: checkedResponseValidation.validationError
+            });
           }
-
-          if (resHeaders.error !== undefined) {
-            if (responseValidationMode === 'hard') {
-              return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
-            } else {
-              console.debug(req.url, 'response header validation error', resHeaders.error);
-            }
-          }
-
-          if (resBody.error !== undefined) {
-            if (responseValidationMode === 'hard') {
-              return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
-            } else {
-              console.debug(req.url, 'response body validation error', resBody.error);
-            }
+          if (!checkedResponseValidation.ok) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
           }
         }
 
@@ -180,9 +184,9 @@ export const registerHttpApiHandler = <
           );
         }
 
-        const serializedResHeaders = (resHeaders.serialized ?? {}) as Record<string, AnyStringSerializableType>;
-        for (const key of Object.keys(serializedResHeaders)) {
-          const headerValue = serializedResHeaders[key];
+        const serializedResHeaders = resHeaders.serialized as AnyHeaders;
+        for (const key of Object.keys(serializedResHeaders ?? {})) {
+          const headerValue = serializedResHeaders![key];
           if (headerValue !== undefined) {
             res.setHeader(key, String(headerValue));
           }
