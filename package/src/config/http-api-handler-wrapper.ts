@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-type AsyncRequestHandler = (req: Request, res: Response, next: NextFunction) => Promise<void | Response<any, Record<string, any>>>;
+export type AsyncRequestHandler = (req: Request, res: Response, next: NextFunction) => Promise<void | Response<any, Record<string, any>>>;
 
-type HttpApiHandlerWrapper = (handler: AsyncRequestHandler) => AsyncRequestHandler;
+export type HttpApiHandlerWrapper = (handler: AsyncRequestHandler) => AsyncRequestHandler;
 
 let globalHttpApiHandlerWrapper: HttpApiHandlerWrapper =
   (handler: AsyncRequestHandler): AsyncRequestHandler =>
