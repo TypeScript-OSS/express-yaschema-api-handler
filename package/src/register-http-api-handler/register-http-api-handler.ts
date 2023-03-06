@@ -225,7 +225,12 @@ export const registerHttpApiHandler = <
   const methodName = expressHandlersByHttpMethod[api.method];
   const asyncHandlerWrapper = getHttpApiHandlerWrapper();
   const handlers: RequestHandler[] = [...middlewares, asyncHandlerWrapper(expressHandler)];
-  app[methodName](relativizedUrl, ...handlers);
+
+  // Delaying the actual registration with Express slightly so we can re-order the registrations to be handled in the correct order (e.g.
+  // longer exact matches first)
+  registerHandlerSoon(methodName, relativizedUrl, () => {
+    app[methodName](convertYaschemaParamSyntaxForExpress(relativizedUrl), ...handlers);
+  });
 };
 
 // Helpers
@@ -244,4 +249,50 @@ const expressHandlersByHttpMethod: Record<Exclude<HttpMethod, UnsupportedHttpMet
   PUT: 'put'
 };
 
+/** Converts from api-lib / use syntax like `{name}` to method routing syntax like `:name` */
+const convertYaschemaParamSyntaxForExpress = (relativeUrl: string) => relativeUrl.replace(/\{([^}]+)\}/g, ':$1');
+
 const isUnsupportedHttpMethod = (method: HttpMethod): method is UnsupportedHttpMethod => unsupportedHttpMethods.has(method);
+
+type ExpressYaschemaDelayedApiRegistrationFunc = (protocol: string, methodName: string, relativeUrl: string, adder: () => void) => void;
+const registerHandlerSoon = (methodName: ExpressHandlerMethodName, url: string, adder: () => void) =>
+  expressYaschemaDelayedApiRegistration('http', methodName, url, adder);
+
+// Note: this same code is also included in other packages, like express-yaschema-ws-api-handler, so those registrations can be consistently
+// ordered as well
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+let globalPendingApiRegistrationTimeout: ReturnType<typeof setTimeout> | undefined;
+const globalPendingApiRegistrations: Record<string, { humanReadableKey: string; adder: () => void }> = {};
+
+const finalizeRegistration = () => {
+  const keys = Object.keys(globalPendingApiRegistrations).sort((a, b) => b.localeCompare(a));
+  for (const key of keys) {
+    console.info(`Registering handler for ${globalPendingApiRegistrations[key].humanReadableKey}`);
+    globalPendingApiRegistrations[key].adder();
+    delete globalPendingApiRegistrations[key];
+  }
+};
+
+(global as any).expressYaschemaDelayedApiRegistration =
+  (global as any).expressYaschemaDelayedApiRegistration ??
+  (((protocol: string, methodName: string, relativeUrl: string, adder: () => void) => {
+    if (globalPendingApiRegistrationTimeout !== undefined) {
+      clearTimeout(globalPendingApiRegistrationTimeout);
+      globalPendingApiRegistrationTimeout = undefined;
+    }
+
+    // We want:
+    // - HTTP to be the lowest-priority protocol
+    // - Longer matches to be processed before shorter ones
+    // - Literal matches to be processed before patterns
+    globalPendingApiRegistrations[`${protocol.replace(/^http$/g, '!!!!')}~${methodName}~${relativeUrl.replace(/[{}]/g, '!')}`] = {
+      humanReadableKey: `${methodName} ${protocol}://${relativeUrl}`,
+      adder
+    };
+
+    globalPendingApiRegistrationTimeout = setTimeout(finalizeRegistration, 0);
+  }) satisfies ExpressYaschemaDelayedApiRegistrationFunc);
+
+const expressYaschemaDelayedApiRegistration = (global as any)
+  .expressYaschemaDelayedApiRegistration as ExpressYaschemaDelayedApiRegistrationFunc;
+/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
