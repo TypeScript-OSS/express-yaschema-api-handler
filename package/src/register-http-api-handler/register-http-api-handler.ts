@@ -1,6 +1,5 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import type { ValidationMode } from 'yaschema';
 import { schema } from 'yaschema';
 import type {
   AnyBody,
@@ -21,6 +20,8 @@ import { triggerOnRequestValidationErrorHandler } from '../config/on-request-val
 import { triggerOnResponseValidationErrorHandler } from '../config/on-response-validation-error';
 import { getDefaultRequestValidationMode, getDefaultResponseValidationMode } from '../config/validation-mode';
 import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname';
+import type { HttpApiHandler } from '../types/HttpApiHandler';
+import type { HttpApiHandlerOptions } from '../types/HttpApiHandlerOptions';
 
 const anyStringSerializableTypeSchema = schema.oneOf3(
   schema.number().setAllowedSerializationForms(['number', 'string']),
@@ -38,12 +39,6 @@ const anyReqBodySchema = schema.any().allowNull().optional();
 const anyResStatusSchema = schema.number();
 const anyResHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema).optional();
 const anyResBodySchema = schema.any().allowNull().optional();
-
-export interface HttpApiHandlerOptions {
-  requestValidationMode?: ValidationMode;
-  responseValidationMode?: ValidationMode;
-  middlewares?: Array<RequestHandler>;
-}
 
 export const registerHttpApiHandler = <
   ReqHeadersT extends AnyHeaders,
@@ -64,29 +59,18 @@ export const registerHttpApiHandler = <
     responseValidationMode = getDefaultResponseValidationMode(),
     middlewares = []
   }: HttpApiHandlerOptions,
-  handler: (args: {
-    express: {
-      req: Request;
-      res: Response;
-      next: NextFunction;
-    };
-    input: {
-      headers: ReqHeadersT;
-      params: ReqParamsT;
-      query: ReqQueryT;
-      body: ReqBodyT;
-    };
-    output: {
-      success: (
-        status: ResStatusT,
-        value: OptionalIfPossiblyUndefined<'headers', ResHeadersT> & OptionalIfPossiblyUndefined<'body', ResBodyT>
-      ) => void;
-      failure: (
-        status: ErrResStatusT,
-        value: OptionalIfPossiblyUndefined<'headers', ErrResHeadersT> & OptionalIfPossiblyUndefined<'body', ErrResBodyT>
-      ) => void;
-    };
-  }) => Promise<void>
+  handler: HttpApiHandler<
+    ReqHeadersT,
+    ReqParamsT,
+    ReqQueryT,
+    ReqBodyT,
+    ResStatusT,
+    ResHeadersT,
+    ResBodyT,
+    ErrResStatusT,
+    ErrResHeadersT,
+    ErrResBodyT
+  >
 ) => {
   const expressHandler = async (req: Request, res: Response, next: NextFunction) => {
     const express = { req, res, next };
@@ -212,7 +196,7 @@ export const registerHttpApiHandler = <
       failure: makeOutputHandler(api.schemas.failureResponse ?? {})
     };
 
-    return await handler({ express, input, output });
+    return await handler({ express, input, output, extras: {} });
   };
 
   if (isUnsupportedHttpMethod(api.method)) {
