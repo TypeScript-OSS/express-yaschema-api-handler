@@ -33,7 +33,7 @@ export const postPing = makeHttpApi({
 // Register the API handler with Express
 export const register = (app: Express) =>
   registerHttpApiHandler(app, postPing, {}, async ({ express: _express, input, output }) => {
-    output.success(200, { headers: {}, body: (input.body.echo?.length ?? 0) > 0 ? `PONG ${input.body.echo ?? ''}` : 'PONG' });
+    output.success(200, { body: (input.body.echo?.length ?? 0) > 0 ? `PONG ${input.body.echo ?? ''}` : 'PONG' });
   });
 ```
 
