@@ -5530,10 +5530,10 @@ yargs@^17.3.1:
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
 
-yaschema-api-fetcher@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/yaschema-api-fetcher/-/yaschema-api-fetcher-1.0.5.tgz#9ba67a4eb3c4cb2fba6ad0475f8a6985b229b369"
-  integrity sha512-G1tD8HOpSVIRrmI41by1HgK3LLzq+burwdzA6X/y8SnPX5qXWRHnj3CMteufOOhir1s+65szVULJbS0q1m2jkQ==
+yaschema-api-fetcher@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/yaschema-api-fetcher/-/yaschema-api-fetcher-1.1.0.tgz#fdc3d4c6d32188ac3ba0b1800f47d9bf0739a4a1"
+  integrity sha512-0K0MwVV1w+tZFKC/pCxIEBL84BWCBfCvcTdLm3ll1mT8laYaGsTnT5rOE9q29NcbUxUSVd3FKHGw8tqvDpFg0g==
   dependencies:
     lodash "^4.17.21"
     yaschema "^2.0.2"

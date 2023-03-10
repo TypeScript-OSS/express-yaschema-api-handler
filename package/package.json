@@ -60,6 +60,6 @@
     "ts-jest": "^29.0.5",
     "typedoc": "^0.23.24",
     "typescript": "4.9.5",
-    "yaschema-api-fetcher": "^1.0.5"
+    "yaschema-api-fetcher": "^1.1.0"
   }
 }
