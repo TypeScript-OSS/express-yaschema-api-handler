@@ -5,9 +5,5 @@ import * as error from './error';
 import * as exception from './exception';
 import * as ping from './ping';
 
-export const register = (app: Express) => {
-  arrayQuery.register(app);
-  exception.register(app);
-  error.register(app);
-  ping.register(app);
-};
+export const register = async (app: Express) =>
+  Promise.all([arrayQuery.register(app), exception.register(app), error.register(app), ping.register(app)]);

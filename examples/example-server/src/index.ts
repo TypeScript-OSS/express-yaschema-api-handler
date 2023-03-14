@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import { getHttpApiHandlerWrapper, setHttpApiHandlerWrapper } from 'express-yaschema-api-handler';
+import { finalizeApiHandlerRegistrations, getHttpApiHandlerWrapper, setHttpApiHandlerWrapper } from 'express-yaschema-api-handler';
 
 import * as handlers from './handlers';
 
@@ -18,12 +18,14 @@ setHttpApiHandlerWrapper((handler) =>
   })
 );
 
-export const launchServer = () => {
+export const launchServer = async () => {
   const app = express();
 
   app.use(bodyParser.json({ type: 'application/json' }));
 
-  handlers.register(app);
+  await handlers.register(app);
+
+  finalizeApiHandlerRegistrations();
 
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

@@ -8,6 +8,7 @@ import { makeHttpApi, setDefaultUrlBase } from 'yaschema-api';
 import type { Fetch } from 'yaschema-api-fetcher';
 import { apiFetch, setFetch } from 'yaschema-api-fetcher';
 
+import { finalizeApiHandlerRegistrations } from '../register-api-handler/register-api-handler';
 import { registerHttpApiHandler } from '../register-http-api-handler/register-http-api-handler';
 
 const port = Number.parseInt(process.env.PORT ?? '8088');
@@ -47,6 +48,8 @@ describe('Ping', () => {
             body: `GOT ${input.query.values.length} values: ${input.query.values.map((v) => `(${typeof v}) ${v}`).join(', ')}`
           });
         });
+
+        finalizeApiHandlerRegistrations();
 
         try {
           server = app.listen(port, () => {

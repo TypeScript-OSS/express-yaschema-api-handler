@@ -8,6 +8,7 @@ import { makeHttpApi, setDefaultUrlBase } from 'yaschema-api';
 import type { Fetch } from 'yaschema-api-fetcher';
 import { apiFetch, setFetch } from 'yaschema-api-fetcher';
 
+import { finalizeApiHandlerRegistrations } from '../register-api-handler/register-api-handler';
 import { registerHttpApiHandler } from '../register-http-api-handler/register-http-api-handler';
 
 const port = Number.parseInt(process.env.PORT ?? '8088');
@@ -38,6 +39,8 @@ describe('No Body', () => {
         registerHttpApiHandler(app, POST, {}, async ({ express: _express, output }) => {
           output.success(StatusCodes.OK, {});
         });
+
+        finalizeApiHandlerRegistrations();
 
         try {
           server = app.listen(port, () => {
