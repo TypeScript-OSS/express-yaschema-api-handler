@@ -1,6 +1,6 @@
 {
   "name": "express-yaschema-api-handler",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Express handler support for yaschema-api",
   "keywords": [
     "schema",
@@ -10,8 +10,8 @@
   ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "repository": "https://github.com/Passfolio/express-yaschema-api-handler.git",
-  "homepage": "https://passfolio.github.io/express-yaschema-api-handler/",
+  "repository": "https://github.com/TypeScript-OSS/express-yaschema-api-handler.git",
+  "homepage": "https://typescript-oss.github.io/express-yaschema-api-handler/",
   "license": "MIT",
   "private": false,
   "scripts": {

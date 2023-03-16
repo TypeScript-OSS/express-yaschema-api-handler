@@ -3,7 +3,7 @@
   "main": "index.js",
   "name": "express-yaschema-api-handler-workspaces",
   "private": true,
-  "repository": "https://github.com/Passfolio/express-yaschema-api-handler.git",
+  "repository": "https://github.com/TypeScript-OSS/express-yaschema-api-handler.git",
   "version": "0.0.0",
   "workspaces": {
     "nohoist": [
