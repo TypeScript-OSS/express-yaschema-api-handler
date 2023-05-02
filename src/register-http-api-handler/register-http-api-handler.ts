@@ -20,6 +20,7 @@ import { triggerOnRequestValidationErrorHandler } from '../config/on-request-val
 import { triggerOnResponseValidationErrorHandler } from '../config/on-response-validation-error';
 import { getDefaultRequestValidationMode, getDefaultResponseValidationMode } from '../config/validation-mode';
 import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname';
+import { resolveYaschemaJsonPrefixedFormDataFields } from '../internal-utils/resolve-yaschema-json-prefixed-form-data-fields';
 import { registerApiHandler } from '../register-api-handler/register-api-handler';
 import type { HttpApiHandler } from '../types/HttpApiHandler';
 import type { HttpApiHandlerOptions } from '../types/HttpApiHandlerOptions';
@@ -77,6 +78,12 @@ export const registerHttpApiHandler = <
   const expressHandler = async (req: Request, res: Response, next: NextFunction) => {
     const express = { req, res, next };
 
+    // Form data supports JSON-encoded fields for objects and nested arrays where the JSON fields are prefixed with "yaschema/json:".
+    if (api.requestType === 'form-data') {
+      // In-place substitution of prefixed JSON strings with their resolved values
+      resolveYaschemaJsonPrefixedFormDataFields(req.body);
+    }
+
     const [reqHeaders, reqParams, reqQuery, reqBody] = await Promise.all([
       (api.schemas.request.headers ?? anyReqHeadersSchema).deserializeAsync(req.headers, { validation: requestValidationMode }),
       (api.schemas.request.params ?? anyReqParamsSchema).deserializeAsync(req.params, { validation: requestValidationMode }),
@@ -107,7 +114,7 @@ export const registerHttpApiHandler = <
         });
       }
       if (!checkedRequestValidation.ok) {
-        return res.status(StatusCodes.BAD_REQUEST).send('Request header validation error');
+        return res.status(StatusCodes.BAD_REQUEST).send(`Request ${checkedRequestValidation.invalidPart} validation error`);
       }
     }
 

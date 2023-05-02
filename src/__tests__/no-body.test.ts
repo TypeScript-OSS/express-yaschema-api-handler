@@ -56,7 +56,7 @@ describe('No Body', () => {
 
   beforeAll(() => {
     setDefaultUrlBase(`http://localhost:${port}`);
-    setFetch(nodeFetch as any as Fetch);
+    setFetch(nodeFetch as Fetch);
   });
 
   afterAll(

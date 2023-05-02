@@ -1,3 +1,5 @@
+import 'fast-text-encoding'; // node-fetch 3 needs this polyfill in Node
+
 import bodyParser from 'body-parser';
 import express from 'express';
 import type * as http from 'http';
@@ -64,7 +66,7 @@ describe('Params', () => {
 
   beforeAll(() => {
     setDefaultUrlBase(`http://localhost:${port}`);
-    setFetch(nodeFetch as any as Fetch);
+    setFetch(nodeFetch as Fetch);
   });
 
   afterAll(
