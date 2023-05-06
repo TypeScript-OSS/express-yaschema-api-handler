@@ -9,7 +9,6 @@ import type {
   AnyStatus,
   GenericHttpApi,
   HttpApi,
-  HttpMethod,
   OptionalIfPossiblyUndefined,
   ResponseSchemas
 } from 'yaschema-api';
@@ -19,7 +18,10 @@ import { getHttpApiHandlerWrapper } from '../config/http-api-handler-wrapper';
 import { triggerOnRequestValidationErrorHandler } from '../config/on-request-validation-error';
 import { triggerOnResponseValidationErrorHandler } from '../config/on-response-validation-error';
 import { getDefaultRequestValidationMode, getDefaultResponseValidationMode } from '../config/validation-mode';
+import { expressHandlersByHttpMethod } from '../internal-consts/express-handlers-by-http-method';
+import { convertYaschemaParamSyntaxForExpress } from '../internal-utils/convert-yaschema-param-syntax-for-express';
 import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname';
+import { isUnsupportedHttpMethod } from '../internal-utils/is-unsupported-http-method';
 import { resolveYaschemaJsonPrefixedFormDataFields } from '../internal-utils/resolve-yaschema-json-prefixed-form-data-fields';
 import { registerApiHandler } from '../register-api-handler/register-api-handler';
 import type { HttpApiHandler } from '../types/HttpApiHandler';
@@ -221,28 +223,7 @@ export const registerHttpApiHandler = <
 
   // Delaying the actual registration with Express slightly so we can re-order the registrations to be handled in the correct order (e.g.
   // longer exact matches first)
-  registerApiHandler('http', methodName, relativizedUrl, () => {
+  registerApiHandler(api, 'http', methodName, relativizedUrl, () => {
     app[methodName](convertYaschemaParamSyntaxForExpress(relativizedUrl), ...handlers);
   });
 };
-
-// Helpers
-
-type UnsupportedHttpMethod = 'LINK' | 'UNLINK';
-const unsupportedHttpMethods = new Set<HttpMethod>(['LINK', 'UNLINK']);
-
-type ExpressHandlerMethodName = 'delete' | 'get' | 'head' | 'patch' | 'post' | 'put';
-
-const expressHandlersByHttpMethod: Record<Exclude<HttpMethod, UnsupportedHttpMethod>, ExpressHandlerMethodName> = {
-  DELETE: 'delete',
-  GET: 'get',
-  HEAD: 'head',
-  PATCH: 'patch',
-  POST: 'post',
-  PUT: 'put'
-};
-
-/** Converts from api-lib / use syntax like `{name}` to method routing syntax like `:name` */
-const convertYaschemaParamSyntaxForExpress = (relativeUrl: string) => relativeUrl.replace(/\{([^}]+)\}/g, ':$1');
-
-const isUnsupportedHttpMethod = (method: HttpMethod): method is UnsupportedHttpMethod => unsupportedHttpMethods.has(method);
