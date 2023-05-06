@@ -1,11 +1,11 @@
-import type { AnyBody, AnyHeaders, AnyParams, AnyQuery, AnyStatus, Api, GenericApi } from 'yaschema-api';
+import type { Api } from 'yaschema-api';
 import { findAllApisInRoot } from 'yaschema-api';
 
 import type { Logger } from '../config/logging';
 import { getLogger } from '../config/logging';
 
-let globalPendingApiRegistrations: Record<string, { humanReadableKey: string; finalizer: () => void }> = {};
-const globalRegisteredApis = new Set<GenericApi>();
+let globalPendingApiRegistrations: Record<string, { api: Api; finalizer: () => void }> = {};
+const globalRegisteredApis = new Set<Api>();
 
 export const detectMissingApiHandlers = ({
   apiRoots,
@@ -16,7 +16,7 @@ export const detectMissingApiHandlers = ({
   apiRoots: any[];
   logLevel: keyof Logger;
   ignoreMissingApisForRouteTypes: string[];
-  ignoreMissingApis: GenericApi[];
+  ignoreMissingApis: Api[];
 }) => {
   const ignoreMissingApisForRouteTypesSet = new Set(ignoreMissingApisForRouteTypes);
   const ignoreMissingApisSet = new Set(ignoreMissingApis);
@@ -48,14 +48,14 @@ export const finalizeApiHandlerRegistrations = ({
   detectMissingApiHandlersInApiRoots?: any[];
   missingApiHandlerLogLevel?: keyof Logger;
   ignoreMissingApisForRouteTypes?: string[];
-  ignoreMissingApis?: GenericApi[];
+  ignoreMissingApis?: Api[];
 } = {}) => {
   const pendingApiRegistrations = globalPendingApiRegistrations;
   globalPendingApiRegistrations = {};
 
   const keys = Object.keys(pendingApiRegistrations).sort((a, b) => b.localeCompare(a));
   for (const key of keys) {
-    getLogger().info?.(`Registering API handler for ${pendingApiRegistrations[key].humanReadableKey}`);
+    getLogger().info?.(`Registering API handler for ${pendingApiRegistrations[key].api.name}`);
     pendingApiRegistrations[key].finalizer();
   }
 
@@ -69,33 +69,22 @@ export const finalizeApiHandlerRegistrations = ({
   }
 };
 
-export const registerApiHandler = <
-  ReqHeadersT extends AnyHeaders,
-  ReqParamsT extends AnyParams,
-  ReqQueryT extends AnyQuery,
-  ReqBodyT extends AnyBody,
-  ResStatusT extends AnyStatus,
-  ResHeadersT extends AnyHeaders,
-  ResBodyT extends AnyBody,
-  ErrResStatusT extends AnyStatus,
-  ErrResHeadersT extends AnyHeaders,
-  ErrResBodyT extends AnyBody
->(
-  api: Api<ReqHeadersT, ReqParamsT, ReqQueryT, ReqBodyT, ResStatusT, ResHeadersT, ResBodyT, ErrResStatusT, ErrResHeadersT, ErrResBodyT>,
+export const registerApiHandler = (
+  api: Api,
   protocol: string,
   methodName: string | undefined,
   relativeUrl: string,
   finalizer: () => void
 ) => {
   // Keeping track of which APIs were registered in case we perform detectMissingApiHandlers later
-  globalRegisteredApis.add(api as any as GenericApi);
+  globalRegisteredApis.add(api);
 
   // We want:
   // - HTTP to be the lowest-priority protocol
   // - Longer matches to be processed before shorter ones
   // - Literal matches to be processed before patterns
   globalPendingApiRegistrations[`${protocol.replace(/^http$/g, '!!!!')}~${methodName ?? '!!!!'}~${relativeUrl.replace(/[{}]/g, '!')}`] = {
-    humanReadableKey: `${api.routeType}:${methodName ?? ''}${(methodName?.length ?? 0) > 0 ? ' ' : ''}${protocol}://${relativeUrl}`,
+    api,
     finalizer
   };
 };
