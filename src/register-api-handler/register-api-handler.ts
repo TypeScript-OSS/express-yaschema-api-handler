@@ -31,7 +31,7 @@ export const detectMissingApiHandlers = ({
           continue;
         }
 
-        getLogger()[logLevel]?.(`API handler missing for`, api);
+        getLogger()[logLevel]?.(`API handler missing for`, api.name);
       }
     }
   }
