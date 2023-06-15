@@ -186,7 +186,7 @@ export const registerHttpApiHandler = <
           res.setHeader(
             'Cache-Control',
             `${cachePolicy.canCache === 'public' ? 'public' : 'private'}, ${
-              cachePolicy.mustRevalidate ? 'must-revalidate' : 'immutable'
+              cachePolicy.mustRevalidate ?? false ? 'must-revalidate' : 'immutable'
             }, max-age=${cacheIntervalSec}, min-fresh=${cacheIntervalSec}`
           );
         }
