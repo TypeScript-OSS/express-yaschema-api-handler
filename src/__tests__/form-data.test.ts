@@ -88,14 +88,15 @@ describe('Params', () => {
     async () =>
       new Promise<void>((resolve, reject) => {
         if (server === undefined) {
-          return resolve();
+          setTimeout(resolve, 0);
+          return;
         }
 
         server.close((error) => {
           if (error !== undefined) {
             reject(error);
           } else {
-            resolve();
+            setTimeout(resolve, 0);
           }
         });
       })

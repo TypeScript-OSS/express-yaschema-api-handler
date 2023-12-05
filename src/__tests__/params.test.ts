@@ -73,20 +73,22 @@ describe('Params', () => {
     async () =>
       new Promise<void>((resolve, reject) => {
         if (server === undefined) {
-          return resolve();
+          setTimeout(resolve, 0);
+          return;
         }
 
         server.close((error) => {
           if (error !== undefined) {
             reject(error);
           } else {
-            resolve();
+            setTimeout(resolve, 0);
           }
         });
       })
   );
 
   it('should work', async () => {
+    console.log('CALLING should work in params');
     const res = await apiFetch(POST, { params: { one: 'hello', two: '12345678-9876' } });
     expect(res.ok).toBeTruthy();
     if (!res.ok) {

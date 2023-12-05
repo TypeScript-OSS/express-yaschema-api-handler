@@ -70,20 +70,22 @@ describe('Ping', () => {
     async () =>
       new Promise<void>((resolve, reject) => {
         if (server === undefined) {
-          return resolve();
+          setTimeout(resolve, 0);
+          return;
         }
 
         server.close((error) => {
           if (error !== undefined) {
             reject(error);
           } else {
-            resolve();
+            setTimeout(resolve, 0);
           }
         });
       })
   );
 
   it('should work', async () => {
+    console.log('CALLING should work');
     const res = await apiFetch(POST, { body: { echo: 'Hello World' } });
     expect(res.ok).toBeTruthy();
     if (!res.ok) {
