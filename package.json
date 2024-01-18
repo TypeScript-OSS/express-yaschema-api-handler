@@ -1,6 +1,6 @@
 {
   "name": "express-yaschema-api-handler",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "description": "Express handler support for yaschema-api",
   "keywords": [
     "schema",
@@ -40,9 +40,9 @@
     "@types/jest": "^29.5.11",
     "@types/lodash": "4.14.202",
     "@types/multer": "^1.4.11",
-    "@types/node-fetch": "^2.6.10",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
-    "@typescript-eslint/parser": "^6.18.1",
+    "@types/node-fetch": "^2.6.11",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
     "body-parser": "^1.20.2",
     "eslint": "8.56.0",
     "eslint-config-prettier": "^9.1.0",
@@ -58,11 +58,11 @@
     "jest-environment-jsdom": "^29.7.0",
     "madge": "6.1.0",
     "node-fetch": "^3.3.2",
-    "prettier": "3.1.1",
+    "prettier": "3.2.4",
     "trash-cli": "5.0.0",
     "ts-jest": "^29.1.1",
     "typedoc": "^0.25.7",
     "typescript": "5.3.3",
-    "yaschema-api-fetcher": "^2.1.8"
+    "yaschema-api-fetcher": "^2.2.0"
   }
 }
