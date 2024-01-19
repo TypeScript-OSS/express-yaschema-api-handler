@@ -1,6 +1,6 @@
 {
   "name": "express-yaschema-api-handler",
-  "version": "2.2.9",
+  "version": "2.2.10",
   "description": "Express handler support for yaschema-api",
   "keywords": [
     "schema",
