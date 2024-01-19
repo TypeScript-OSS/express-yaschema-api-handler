@@ -28,7 +28,8 @@ const POST = makeHttpApi({
         two: schema.regex(/\d{8}-\d{4}/),
         three: schema.any(), // File
         four: schema.object({ a: schema.string() }),
-        five: schema.array() // Files
+        five: schema.array(), // Files,
+        six: schema.array({ items: schema.number() })
       })
     },
     successResponse: {
@@ -60,7 +61,7 @@ describe('Params', () => {
             output.success(StatusCodes.OK, {
               body: `GOT ${input.body.one} AND ${input.body.two} AND file(three) (${three.buffer.toString('utf-8')}) with length ${
                 three.size
-              } AND ${JSON.stringify(input.body.four)} AND file(five[0]) (${five[0].buffer.toString('utf-8')}) with length ${five[0].size} AND file(five[1]) (${five[1].buffer.toString('utf-8')}) with length ${five[1].size}`
+              } AND ${JSON.stringify(input.body.four)} AND file(five[0]) (${five[0].buffer.toString('utf-8')}) with length ${five[0].size} AND file(five[1]) (${five[1].buffer.toString('utf-8')}) with length ${five[1].size} AND ${JSON.stringify(input.body.six)}`
             });
           }
         );
@@ -111,7 +112,8 @@ describe('Params', () => {
         two: '12345678-9876',
         three: new Blob([Buffer.from('hi there', 'utf-8')]),
         four: { a: 'hi' },
-        five: [new Blob([Buffer.from('hello world', 'utf-8')]), new Blob([Buffer.from('goodbye world', 'utf-8')])]
+        five: [new Blob([Buffer.from('hello world', 'utf-8')]), new Blob([Buffer.from('goodbye world', 'utf-8')])],
+        six: [3.14, 2, -91.4]
       }
     });
     expect(res.ok).toBeTruthy();
@@ -121,7 +123,7 @@ describe('Params', () => {
 
     expect(res.status).toBe(StatusCodes.OK);
     expect(res.body).toBe(
-      'GOT hello AND 12345678-9876 AND file(three) (hi there) with length 8 AND {"a":"hi"} AND file(five[0]) (hello world) with length 11 AND file(five[1]) (goodbye world) with length 13'
+      'GOT hello AND 12345678-9876 AND file(three) (hi there) with length 8 AND {"a":"hi"} AND file(five[0]) (hello world) with length 11 AND file(five[1]) (goodbye world) with length 13 AND [3.14,2,-91.4]'
     );
 
     expect(true).toBe(true);

@@ -19,11 +19,26 @@ export const resolveSpecialFormDataFields = (body: any) => {
       bodyObj[key] = jsonValue;
     }
 
+    // This is specifically for dealing with files, which don't automatically get their suffixes removed
     if (key.endsWith('[]')) {
       const newKey = key.substring(0, key.length - '[]'.length);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       bodyObj[newKey] = bodyObj[key];
       delete bodyObj[key];
+    }
+
+    if (Array.isArray(value)) {
+      let entryIndex = 0;
+      for (const entry of value) {
+        if (typeof entry === 'string' && entry.startsWith(YASCHEMA_JSON_PREFIX)) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const jsonValue = JSON.parse(entry.substring(YASCHEMA_JSON_PREFIX.length));
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          value[entryIndex] = jsonValue;
+        }
+
+        entryIndex += 1;
+      }
     }
   }
 };
