@@ -1,7 +1,10 @@
 const YASCHEMA_JSON_PREFIX = 'yaschema/json:';
 
-/** Substitutes values like: `'yaschema/json:{"one": 1}'` with resolved values like `{ one: 1 }` */
-export const resolveYaschemaJsonPrefixedFormDataFields = (body: any) => {
+/**
+ * - Substitutes values like: `'yaschema/json:{"one": 1}'` with resolved values like `{ one: 1 }`
+ * - Removes `'[]'` suffixes from keys
+ */
+export const resolveSpecialFormDataFields = (body: any) => {
   if (body === null || typeof body !== 'object') {
     return;
   }
@@ -14,6 +17,13 @@ export const resolveYaschemaJsonPrefixedFormDataFields = (body: any) => {
       const jsonValue = JSON.parse(value.substring(YASCHEMA_JSON_PREFIX.length));
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       bodyObj[key] = jsonValue;
+    }
+
+    if (key.endsWith('[]')) {
+      const newKey = key.substring(0, key.length - '[]'.length);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      bodyObj[newKey] = bodyObj[key];
+      delete bodyObj[key];
     }
   }
 };

@@ -22,7 +22,7 @@ import { expressHandlersByHttpMethod } from '../internal-consts/express-handlers
 import { convertYaschemaParamSyntaxForExpress } from '../internal-utils/convert-yaschema-param-syntax-for-express';
 import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname';
 import { isUnsupportedHttpMethod } from '../internal-utils/is-unsupported-http-method';
-import { resolveYaschemaJsonPrefixedFormDataFields } from '../internal-utils/resolve-yaschema-json-prefixed-form-data-fields';
+import { resolveSpecialFormDataFields } from '../internal-utils/resolve-special-form-data-fields';
 import { registerApiHandler } from '../register-api-handler/register-api-handler';
 import type { HttpApiHandler } from '../types/HttpApiHandler';
 import type { HttpApiHandlerOptions } from '../types/HttpApiHandlerOptions';
@@ -83,7 +83,7 @@ export const registerHttpApiHandler = <
     // Form data supports JSON-encoded fields for objects and nested arrays where the JSON fields are prefixed with "yaschema/json:".
     if (api.requestType === 'form-data') {
       // In-place substitution of prefixed JSON strings with their resolved values
-      resolveYaschemaJsonPrefixedFormDataFields(req.body);
+      resolveSpecialFormDataFields(req.body);
     }
 
     const [reqHeaders, reqParams, reqQuery, reqBody] = await Promise.all([

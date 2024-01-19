@@ -27,7 +27,8 @@ const POST = makeHttpApi({
         one: schema.string(),
         two: schema.regex(/\d{8}-\d{4}/),
         three: schema.any(), // File
-        four: schema.object({ a: schema.string() })
+        four: schema.object({ a: schema.string() }),
+        five: schema.array() // Files
       })
     },
     successResponse: {
@@ -51,14 +52,15 @@ describe('Params', () => {
         registerHttpApiHandler(
           app,
           POST,
-          { middlewares: acceptFilesMiddlewares({ three: 1 }) },
+          { middlewares: acceptFilesMiddlewares({ three: 1, 'five[]': 2 }) },
           async ({ express: _express, input, output }) => {
             const three = (input.body.three as Express.Multer.File[])[0];
+            const five = input.body.five as Express.Multer.File[];
 
             output.success(StatusCodes.OK, {
-              body: `GOT ${input.body.one} AND ${input.body.two} AND file (${three.buffer.toString('utf-8')}) with length ${
+              body: `GOT ${input.body.one} AND ${input.body.two} AND file(three) (${three.buffer.toString('utf-8')}) with length ${
                 three.size
-              } AND ${JSON.stringify(input.body.four)}`
+              } AND ${JSON.stringify(input.body.four)} AND file(five[0]) (${five[0].buffer.toString('utf-8')}) with length ${five[0].size} AND file(five[1]) (${five[1].buffer.toString('utf-8')}) with length ${five[1].size}`
             });
           }
         );
@@ -108,7 +110,8 @@ describe('Params', () => {
         one: 'hello',
         two: '12345678-9876',
         three: new Blob([Buffer.from('hi there', 'utf-8')]),
-        four: { a: 'hi' }
+        four: { a: 'hi' },
+        five: [new Blob([Buffer.from('hello world', 'utf-8')]), new Blob([Buffer.from('goodbye world', 'utf-8')])]
       }
     });
     expect(res.ok).toBeTruthy();
@@ -117,7 +120,9 @@ describe('Params', () => {
     }
 
     expect(res.status).toBe(StatusCodes.OK);
-    expect(res.body).toBe('GOT hello AND 12345678-9876 AND file (hi there) with length 8 AND {"a":"hi"}');
+    expect(res.body).toBe(
+      'GOT hello AND 12345678-9876 AND file(three) (hi there) with length 8 AND {"a":"hi"} AND file(five[0]) (hello world) with length 11 AND file(five[1]) (goodbye world) with length 13'
+    );
 
     expect(true).toBe(true);
   });
