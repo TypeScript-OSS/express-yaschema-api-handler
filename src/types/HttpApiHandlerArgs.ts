@@ -29,11 +29,11 @@ export interface HttpApiHandlerArgs<
     success: (
       status: ResStatusT,
       value: OptionalIfPossiblyUndefined<'headers', ResHeadersT> & OptionalIfPossiblyUndefined<'body', ResBodyT>
-    ) => void;
+    ) => Promise<void>;
     failure: (
       status: ErrResStatusT,
       value: OptionalIfPossiblyUndefined<'headers', ErrResHeadersT> & OptionalIfPossiblyUndefined<'body', ErrResBodyT>
-    ) => void;
+    ) => Promise<void>;
   };
   extras: ExtraArgsT;
 }

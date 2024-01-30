@@ -174,7 +174,8 @@ export const registerHttpApiHandler = <
             });
           }
           if (!checkedResponseValidation.ok) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
+            return;
           }
         }
 
@@ -199,7 +200,8 @@ export const registerHttpApiHandler = <
           }
         }
 
-        return res.status(status).send(JSON.stringify(resBody.serialized));
+        res.status(status).send(JSON.stringify(resBody.serialized));
+        return;
       };
 
     const output = {
@@ -207,7 +209,7 @@ export const registerHttpApiHandler = <
       failure: makeOutputHandler(api.schemas.failureResponse ?? {})
     };
 
-    return await handler({ express, input, output, extras: {} });
+    return handler({ express, input, output, extras: {} });
   };
 
   if (isUnsupportedHttpMethod(api.method)) {
