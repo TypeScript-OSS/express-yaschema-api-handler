@@ -1,6 +1,6 @@
 {
   "name": "express-yaschema-api-handler",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Express handler support for yaschema-api",
   "keywords": [
     "schema",
@@ -41,10 +41,10 @@
     "@types/lodash": "4.14.202",
     "@types/multer": "^1.4.11",
     "@types/node-fetch": "^2.6.11",
-    "@typescript-eslint/eslint-plugin": "^7.0.1",
-    "@typescript-eslint/parser": "^7.0.1",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
     "body-parser": "^1.20.2",
-    "eslint": "8.56.0",
+    "eslint": "8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
@@ -61,7 +61,7 @@
     "prettier": "3.2.5",
     "trash-cli": "5.0.0",
     "ts-jest": "^29.1.2",
-    "typedoc": "^0.25.8",
+    "typedoc": "^0.25.9",
     "typescript": "5.3.3",
     "yaschema-api-fetcher": "^2.5.0"
   }

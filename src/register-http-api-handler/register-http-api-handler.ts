@@ -30,7 +30,7 @@ import type { HttpApiHandlerOptions } from '../types/HttpApiHandlerOptions';
 const anyStringSerializableTypeSchema = schema.oneOf3(
   schema.number().setAllowedSerializationForms(['number', 'string']),
   schema.boolean().setAllowedSerializationForms(['boolean', 'string']),
-  schema.string()
+  schema.string().allowEmptyString()
 );
 
 const anyReqHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema).optional();
