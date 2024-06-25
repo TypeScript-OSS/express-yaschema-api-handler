@@ -1,17 +1,13 @@
-import 'fast-text-encoding'; // node-fetch 3 needs this polyfill in Node
-
 import bodyParser from 'body-parser';
 import express from 'express';
 import type * as http from 'http';
 import { StatusCodes } from 'http-status-codes';
-import nodeFetch from 'node-fetch';
 import { schema } from 'yaschema';
 import { makeHttpApi, setDefaultUrlBase } from 'yaschema-api';
-import type { Fetch } from 'yaschema-api-fetcher';
-import { apiFetch, setFetch } from 'yaschema-api-fetcher';
+import { apiFetch } from 'yaschema-api-fetcher';
 
-import { finalizeApiHandlerRegistrations } from '../register-api-handler/register-api-handler';
-import { registerHttpApiHandler } from '../register-http-api-handler/register-http-api-handler';
+import { finalizeApiHandlerRegistrations } from '../register-api-handler/register-api-handler.js';
+import { registerHttpApiHandler } from '../register-http-api-handler/register-http-api-handler.js';
 
 const port = Number.parseInt(process.env.PORT ?? '8088');
 
@@ -66,7 +62,6 @@ describe('Params', () => {
 
   beforeAll(() => {
     setDefaultUrlBase(`http://localhost:${port}`);
-    setFetch(nodeFetch as Fetch);
   });
 
   afterAll(

@@ -1,6 +1,11 @@
 # Custom
 example-server
 
+.prettierrc.mjs
+eslint.config.mjs
+src
+typedoc.json
+
 # Account key
 *serviceAccountKey*
 
@@ -16,7 +21,7 @@ test
 **/*.spec.*
 coverage
 .nyc_output
-jest.config.js
+jest.config.mjs
 
 tsconfig.json
 tsconfig.*.json

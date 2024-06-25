@@ -14,16 +14,16 @@ import type {
 } from 'yaschema-api';
 import { checkRequestValidation, checkResponseValidation } from 'yaschema-api';
 
-import { getHttpApiHandlerWrapper } from '../config/http-api-handler-wrapper';
-import { triggerOnRequestValidationErrorHandler } from '../config/on-request-validation-error';
-import { triggerOnResponseValidationErrorHandler } from '../config/on-response-validation-error';
-import { getDefaultRequestValidationMode, getDefaultResponseValidationMode } from '../config/validation-mode';
-import { expressHandlersByHttpMethod } from '../internal-consts/express-handlers-by-http-method';
-import { convertYaschemaParamSyntaxForExpress } from '../internal-utils/convert-yaschema-param-syntax-for-express';
-import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname';
-import { isUnsupportedHttpMethod } from '../internal-utils/is-unsupported-http-method';
-import { resolveSpecialFormDataFields } from '../internal-utils/resolve-special-form-data-fields';
-import { registerApiHandler } from '../register-api-handler/register-api-handler';
+import { getHttpApiHandlerWrapper } from '../config/http-api-handler-wrapper.js';
+import { triggerOnRequestValidationErrorHandler } from '../config/on-request-validation-error.js';
+import { triggerOnResponseValidationErrorHandler } from '../config/on-response-validation-error.js';
+import { getDefaultRequestValidationMode, getDefaultResponseValidationMode } from '../config/validation-mode.js';
+import { expressHandlersByHttpMethod } from '../internal-consts/express-handlers-by-http-method.js';
+import { convertYaschemaParamSyntaxForExpress } from '../internal-utils/convert-yaschema-param-syntax-for-express.js';
+import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname.js';
+import { isUnsupportedHttpMethod } from '../internal-utils/is-unsupported-http-method.js';
+import { resolveSpecialFormDataFields } from '../internal-utils/resolve-special-form-data-fields.js';
+import { registerApiHandler } from '../register-api-handler/register-api-handler.js';
 import type { HttpApiHandler } from '../types/HttpApiHandler';
 import type { HttpApiHandlerOptions } from '../types/HttpApiHandlerOptions';
 

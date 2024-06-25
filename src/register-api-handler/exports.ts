@@ -1,1 +1,1 @@
-export * from './register-api-handler';
+export * from './register-api-handler.js';

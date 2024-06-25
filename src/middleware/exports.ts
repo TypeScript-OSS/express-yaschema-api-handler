@@ -1,1 +1,1 @@
-export * from './accept-files-middlewares';
+export * from './accept-files-middlewares.js';

@@ -2,7 +2,7 @@ import type { Api } from 'yaschema-api';
 import { findAllApisInRoot } from 'yaschema-api';
 
 import type { Logger } from '../config/logging';
-import { getLogger } from '../config/logging';
+import { getLogger } from '../config/logging.js';
 
 let globalPendingApiRegistrations: Record<string, { api: Api; finalizer: () => void }> = {};
 const globalRegisteredApis = new Set<Api>();

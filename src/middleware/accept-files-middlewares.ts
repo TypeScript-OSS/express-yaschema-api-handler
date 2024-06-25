@@ -1,5 +1,5 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import HttpStatusCodes from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import multer from 'multer';
 
 export const acceptFilesMiddlewares = (maxCountsByField: Record<string, number>, multerOptions?: multer.Options): RequestHandler[] => [
@@ -13,7 +13,7 @@ const mapMulterFilesIntoRequestBodyMiddleware = (req: Request, res: Response, ne
   if (req.body === null) {
     req.body = {};
   } else if (typeof req.body !== 'object') {
-    res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
     return;
   }
 

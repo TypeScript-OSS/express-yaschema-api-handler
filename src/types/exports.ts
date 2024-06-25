@@ -1,3 +1,3 @@
-export * from './HttpApiHandler';
-export * from './HttpApiHandlerArgs';
-export * from './HttpApiHandlerOptions';
+export * from './HttpApiHandler.js';
+export * from './HttpApiHandlerArgs.js';
+export * from './HttpApiHandlerOptions.js';

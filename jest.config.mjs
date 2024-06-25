@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   preset: 'ts-jest',
   extensionsToTreatAsEsm: ['.ts'],
   coverageReporters: ['text', 'html'],
@@ -7,6 +7,10 @@ module.exports = {
       isolatedModules: true,
       useESM: true
     }
+  },
+  moduleNameMapper: {
+    'ipaddr\\.js': '$0',
+    '(.+)\\.js': '$1'
   },
   coverageThreshold: {
     global: {
