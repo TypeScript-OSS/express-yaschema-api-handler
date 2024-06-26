@@ -651,10 +651,10 @@
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.1.1.tgz#1ec17e2edbec25c8306d424ecfbf13c7de1aaa31"
   integrity sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==
 
-"@shikijs/core@1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@shikijs/core/-/core-1.9.0.tgz#ff717fef5e0e9882f0848272699fd8f04d6f9a07"
-  integrity sha512-cbSoY8P/jgGByG8UOl3jnP/CWg/Qk+1q+eAKWtcrU3pNoILF8wTsLB0jT44qUBV8Ce1SvA9uqcM9Xf+u3fJFBw==
+"@shikijs/core@1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@shikijs/core/-/core-1.9.1.tgz#f8c61fb19dbec510fa27f892c441d99b53093e49"
+  integrity sha512-EmUful2MQtY8KgCF1OkBtOuMcvaZEvmdubhW0UHCGXi21O9dRLeADVCj+k6ZS+de7Mz9d2qixOXJ+GLhcK3pXg==
 
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
@@ -841,9 +841,9 @@
     "@types/express" "*"
 
 "@types/node@*":
-  version "20.14.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.14.8.tgz#45c26a2a5de26c3534a9504530ddb3b27ce031ac"
-  integrity sha512-DO+2/jZinXfROG7j7WKFn/3C6nFwxy2lLpgLjEXJz+0XKphZlTLJ14mo8Vfg8X5BWN6XjyESXq+LcYdT7tR3bA==
+  version "20.14.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.14.9.tgz#12e8e765ab27f8c421a1820c99f5f313a933b420"
+  integrity sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==
   dependencies:
     undici-types "~5.26.4"
 
@@ -1932,9 +1932,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.796:
-  version "1.4.811"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.811.tgz#031c8b101e7d0a7cde1dfdb0623dbdb5e19655cd"
-  integrity sha512-CDyzcJ5XW78SHzsIOdn27z8J4ist8eaFLhdto2hSMSJQgsiwvbv2fbizcKUICryw1Wii1TI/FEkvzvJsR3awrA==
+  version "1.4.812"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.812.tgz#21b78709c5a13af5d5c688d135a22dcea7617acf"
+  integrity sha512-7L8fC2Ey/b6SePDFKR2zHAy4mbdp1/38Yk5TsARO66W3hC5KEaeKMMHoxwtuH+jcu2AYLSn9QX04i95t6Fl1Hg==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -3908,9 +3908,9 @@ minimatch@^3.0.4, minimatch@^3.0.5, minimatch@^3.1.1, minimatch@^3.1.2:
     brace-expansion "^1.1.7"
 
 minimatch@^9.0.4:
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.4.tgz#8e49c731d1749cbec05050ee5145147b32496a51"
-  integrity sha512-KqWh+VchfxcMNRAJjj2tnsSJdNbHsVgnkBhTNrW7AjVo6OvLtxw8zfT9oLw1JSohlFzJ8jCoTgaoXvJ+kHt6fw==
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.5.tgz#d74f9dd6b57d83d8e98cfb82133b03978bc929e5"
+  integrity sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==
   dependencies:
     brace-expansion "^2.0.1"
 
@@ -4794,11 +4794,11 @@ shebang-regex@^3.0.0:
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
 shiki@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/shiki/-/shiki-1.9.0.tgz#e4d3a044d9c746aefbea47615e83323fdc3dc361"
-  integrity sha512-i6//Lqgn7+7nZA0qVjoYH0085YdNk4MC+tJV4bo+HgjgRMJ0JmkLZzFAuvVioJqLkcGDK5GAMpghZEZkCnwxpQ==
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/shiki/-/shiki-1.9.1.tgz#9d9f553b06e70a9e71b5457622d6f4a5aaf1db27"
+  integrity sha512-8PDkgb5ja3nfujTjvC4VytL6wGOGCtFAClUb2r3QROevYXxcq+/shVJK5s6gy0HZnjaJgFxd6BpPqpRfqne5rA==
   dependencies:
-    "@shikijs/core" "1.9.0"
+    "@shikijs/core" "1.9.1"
 
 side-channel@^1.0.4:
   version "1.0.6"
@@ -5583,28 +5583,28 @@ yargs@^17.3.1:
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
 
-yaschema-api-fetcher@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/yaschema-api-fetcher/-/yaschema-api-fetcher-2.7.1.tgz#49830219708cff75833dda882d9418eb3da45f8b"
-  integrity sha512-qcG0rWzI5M/i8rdeIyEH98CT+86bDiopN30OtZIaT28rvMKFpFhoOL3wFb8PwsnltxyN4cCPJBq2eTjjbNVkKA==
+yaschema-api-fetcher@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/yaschema-api-fetcher/-/yaschema-api-fetcher-2.7.2.tgz#b5e50b77b597d287e6dc4670bc0f9de44cc874a9"
+  integrity sha512-mp8a/4QkrX3ALiQOcTilzyqr+WvH5k48c27xR9d2GmNUar0fMFNn5dK2xDfd0+KXhE/GJPq8tqwhIY65qrciHg==
   dependencies:
     lodash "^4.17.21"
     lodash-es "^4.17.21"
     uuid "10.0.0"
-    yaschema "^3.5.0"
-    yaschema-api "^3.6.0"
+    yaschema "^3.5.1"
+    yaschema-api "^3.6.1"
 
-yaschema-api@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/yaschema-api/-/yaschema-api-3.6.0.tgz#da49880817c8b9fdb1721699ddca2fda2d918f3e"
-  integrity sha512-0baBRtqdDwTOf7KbGvFRQzjiavI+m2/CMTryfAGoImFaT2scH2UYn/FXuWEZlHruvHqpKlyy0wmRmZIwKh+14Q==
+yaschema-api@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/yaschema-api/-/yaschema-api-3.6.1.tgz#a0bb72161e2e0d53b666b8fbba2efc64394f1b9f"
+  integrity sha512-RIctlp/cdk+6crtDCB8USR1CFYNpkdNnjB/cUuMDe7dX6v1acBeMavLl/REJCsqimUX1q6eFta8WLf7SYDzCxw==
   dependencies:
-    yaschema "^3.5.0"
+    yaschema "^3.5.1"
 
-yaschema@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/yaschema/-/yaschema-3.5.0.tgz#77ee08c5ae87ca55a95e7d3b3f1f593ec0b1f424"
-  integrity sha512-CBw9sRS00nNYzvTEdwnPD9aE4gm3COFSCHCOQI2FniFMZCOhixfLCmVKq67+jI+LrgdsxTF5Dkh6uBjkrF5l4g==
+yaschema@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/yaschema/-/yaschema-3.5.1.tgz#784240e755fe16ca384a2eeb3d772d8c7b368568"
+  integrity sha512-eoj9luLp+ri/U5IjUzAhmdMLpa6Fwz01vOw475ruUJ8qkaqIs0T9b0W4dS9HTPwNS6bZpX+EtnIR/bOBl8X0SA==
   dependencies:
     lodash "^4.17.21"
     lodash-es "^4.17.21"
