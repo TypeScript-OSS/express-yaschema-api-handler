@@ -3,8 +3,8 @@ example-server
 
 .prettierrc.mjs
 eslint.config.mjs
-src
 typedoc.json
+build.mjs
 
 # Account key
 *serviceAccountKey*
