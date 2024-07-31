@@ -9,6 +9,7 @@ interface OnResponseValidationErrorHandlerArgs {
   res: GenericApiResponse | undefined;
   invalidPart: keyof GenericApiResponse;
   validationError: string;
+  validationErrorPath: string;
 }
 
 let globalOnResponseValidationErrorHandler: (args: OnResponseValidationErrorHandlerArgs) => void = () => {};

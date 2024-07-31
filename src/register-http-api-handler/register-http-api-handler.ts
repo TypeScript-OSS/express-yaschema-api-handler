@@ -112,7 +112,8 @@ export const registerHttpApiHandler = <
           },
           expressReq: express.req,
           invalidPart: checkedRequestValidation.invalidPart,
-          validationError: checkedRequestValidation.validationError
+          validationError: checkedRequestValidation.validationError,
+          validationErrorPath: checkedRequestValidation.validationErrorPath
         });
       }
       if (!checkedRequestValidation.ok) {
@@ -170,7 +171,8 @@ export const registerHttpApiHandler = <
               expressReq: express.req,
               res: { status, headers, body },
               invalidPart: checkedResponseValidation.invalidPart,
-              validationError: checkedResponseValidation.validationError
+              validationError: checkedResponseValidation.validationError,
+              validationErrorPath: checkedResponseValidation.validationErrorPath
             });
           }
           if (!checkedResponseValidation.ok) {

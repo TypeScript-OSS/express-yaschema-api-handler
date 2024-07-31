@@ -8,6 +8,7 @@ interface OnRequestValidationErrorHandlerArgs {
   expressReq: Request;
   invalidPart: keyof GenericApiRequest;
   validationError: string;
+  validationErrorPath: string;
 }
 
 let globalOnRequestValidationErrorHandler: (args: OnRequestValidationErrorHandlerArgs) => void = () => {};
