@@ -117,7 +117,8 @@ export const registerHttpApiHandler = <
         });
       }
       if (!checkedRequestValidation.ok) {
-        return res.status(StatusCodes.BAD_REQUEST).send(`Request ${checkedRequestValidation.invalidPart} validation error`);
+        res.status(StatusCodes.BAD_REQUEST).send(`Request ${checkedRequestValidation.invalidPart} validation error`);
+        return;
       }
     }
 
@@ -211,7 +212,7 @@ export const registerHttpApiHandler = <
       failure: makeOutputHandler(api.schemas.failureResponse ?? {})
     };
 
-    return handler({ express, input, output, extras: {} });
+    handler({ express, input, output, extras: {} });
   };
 
   if (isUnsupportedHttpMethod(api.method)) {

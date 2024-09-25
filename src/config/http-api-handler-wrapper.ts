@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-export type AsyncRequestHandler = (req: Request, res: Response, next: NextFunction) => Promise<void | Response<any, Record<string, any>>>;
+export type AsyncRequestHandler = (req: Request, res: Response, next: NextFunction) => Promise<void>;
 
 export type HttpApiHandlerWrapper = (handler: AsyncRequestHandler) => AsyncRequestHandler;
 
@@ -9,9 +9,9 @@ let globalHttpApiHandlerWrapper: HttpApiHandlerWrapper =
   (handler: AsyncRequestHandler): AsyncRequestHandler =>
   async (req, res, next) => {
     try {
-      return await handler(req, res, next);
-    } catch (e) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
+      await handler(req, res, next);
+    } catch (_e) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Internal server error');
     }
   };
 
