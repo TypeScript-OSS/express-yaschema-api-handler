@@ -1,6 +1,5 @@
 import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { schema } from 'yaschema';
 import type {
   AnyBody,
   AnyHeaders,
@@ -12,7 +11,17 @@ import type {
   OptionalIfPossiblyUndefined,
   ResponseSchemas
 } from 'yaschema-api';
-import { checkRequestValidation, checkResponseValidation } from 'yaschema-api';
+import {
+  anyReqBodySchema,
+  anyReqHeadersSchema,
+  anyReqParamsSchema,
+  anyReqQuerySchema,
+  anyResBodySchema,
+  anyResHeadersSchema,
+  anyResStatusSchema,
+  checkRequestValidation,
+  checkResponseValidation
+} from 'yaschema-api';
 
 import { getHttpApiHandlerWrapper } from '../config/http-api-handler-wrapper.js';
 import { triggerOnRequestValidationErrorHandler } from '../config/on-request-validation-error.js';
@@ -26,23 +35,6 @@ import { resolveSpecialFormDataFields } from '../internal-utils/resolve-special-
 import { registerApiHandler } from '../register-api-handler/register-api-handler.js';
 import type { HttpApiHandler } from '../types/HttpApiHandler';
 import type { HttpApiHandlerOptions } from '../types/HttpApiHandlerOptions';
-
-const anyStringSerializableTypeSchema = schema.oneOf3(
-  schema.number().setAllowedSerializationForms(['number', 'string']),
-  schema.boolean().setAllowedSerializationForms(['boolean', 'string']),
-  schema.string().allowEmptyString()
-);
-
-const anyReqHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema).optional();
-const anyReqParamsSchema = schema.record(schema.string(), anyStringSerializableTypeSchema).optional();
-const anyReqQuerySchema = schema
-  .record(schema.string(), schema.oneOf(anyStringSerializableTypeSchema, schema.array({ items: anyStringSerializableTypeSchema })))
-  .optional();
-const anyReqBodySchema = schema.any().allowNull().optional();
-
-const anyResStatusSchema = schema.number();
-const anyResHeadersSchema = schema.record(schema.string(), anyStringSerializableTypeSchema).optional();
-const anyResBodySchema = schema.any().allowNull().optional();
 
 /** Be sure to call `finalizeApiHandlerRegistrations` once all API registrations have been added. */
 export const registerHttpApiHandler = <

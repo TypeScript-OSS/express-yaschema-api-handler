@@ -6067,21 +6067,21 @@ yargs@^17.3.1:
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
 
-yaschema-api-fetcher@^2.8.3:
-  version "2.8.3"
-  resolved "https://registry.yarnpkg.com/yaschema-api-fetcher/-/yaschema-api-fetcher-2.8.3.tgz#4955681b40e550fbb9279f9875848faa27efc998"
-  integrity sha512-A9Rv3TQzTT/gm6TRGZDkPdxjz3uvBweobfPGG9dCSmHl63XmQLmJ2LVnfCbcagabzqACuwiRskXbu8co+1u6DQ==
+yaschema-api-fetcher@^2.8.5:
+  version "2.8.5"
+  resolved "https://registry.yarnpkg.com/yaschema-api-fetcher/-/yaschema-api-fetcher-2.8.5.tgz#23969d7e79ec1efecdf99559707374356ad550c5"
+  integrity sha512-okKYRMjnxxPAAHfjR2hMfncaYTWl9ZF3yu5jDFPoUFd+8ruu6v4zJ+fUyj4bdLzA4x/ccGINeZXOJ8gi+FF5Hw==
   dependencies:
     lodash "^4.17.21"
     lodash-es "^4.17.21"
     uuid "10.0.0"
     yaschema "^3.6.0"
-    yaschema-api "^3.7.1"
+    yaschema-api "^3.8.1"
 
-yaschema-api@^3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/yaschema-api/-/yaschema-api-3.7.1.tgz#a65487849c0e6699c1c7f6d0c7125d6af95b5690"
-  integrity sha512-IR18P/veg2SaDjB0ow8dew8B8XOgkmzoX/tFGdu/01Mqxef4Vgl/uUk00h0dZoxESRGWuNONFnfwcxQuyvHElg==
+yaschema-api@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/yaschema-api/-/yaschema-api-3.8.1.tgz#ee1bb4719d442ae11ac4fe96fd00e815a2864bb5"
+  integrity sha512-MsBblPzhF0aAGD2CnQCdPBggoMCk3qsEcgz+MeqaE7HVtp54nRHdQYHrKYCQNVKXcdg6N+7SmRZ0ycgVy7ZYlg==
   dependencies:
     yaschema "^3.6.0"
 
