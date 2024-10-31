@@ -191,6 +191,7 @@ export const registerHttpApiHandler = <
         for (const key of Object.keys(serializedResHeaders ?? {})) {
           const headerValue = serializedResHeaders![key];
           if (headerValue !== undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             res.setHeader(key, String(headerValue));
           }
         }
