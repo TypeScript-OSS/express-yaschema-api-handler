@@ -35,6 +35,7 @@ import { resolveSpecialFormDataFields } from '../internal-utils/resolve-special-
 import { registerApiHandler } from '../register-api-handler/register-api-handler.js';
 import type { HttpApiHandler } from '../types/HttpApiHandler';
 import type { HttpApiHandlerOptions } from '../types/HttpApiHandlerOptions';
+import type { YaschemaApiExpressContextAccessor } from '../types/YaschemaApiExpressContextAccessor.js';
 
 /** Be sure to call `finalizeApiHandlerRegistrations` once all API registrations have been added. */
 export const registerHttpApiHandler = <
@@ -49,7 +50,7 @@ export const registerHttpApiHandler = <
   ErrResHeadersT extends AnyHeaders,
   ErrResBodyT extends AnyBody
 >(
-  app: Express,
+  app: Express & YaschemaApiExpressContextAccessor,
   api: HttpApi<ReqHeadersT, ReqParamsT, ReqQueryT, ReqBodyT, ResStatusT, ResHeadersT, ResBodyT, ErrResStatusT, ErrResHeadersT, ErrResBodyT>,
   {
     requestValidationMode = getDefaultRequestValidationMode(),
@@ -221,7 +222,14 @@ export const registerHttpApiHandler = <
 
   // Delaying the actual registration with Express slightly so we can re-order the registrations to be handled in the correct order (e.g.
   // longer exact matches first)
-  registerApiHandler(api, 'http', methodName, relativizedUrl, () => {
-    app[methodName](convertYaschemaParamSyntaxForExpress(relativizedUrl), ...handlers);
+  registerApiHandler({
+    api,
+    protocol: 'http',
+    methodName,
+    relativeUrl: relativizedUrl,
+    finalizer: () => {
+      app[methodName](convertYaschemaParamSyntaxForExpress(relativizedUrl), ...handlers);
+    },
+    context: app.getYaschemaApiExpressContext?.()
   });
 };

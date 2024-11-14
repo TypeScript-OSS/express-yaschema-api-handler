@@ -3,20 +3,22 @@ import { findAllApisInRoot } from 'yaschema-api';
 
 import type { Logger } from '../config/logging';
 import { getLogger } from '../config/logging.js';
+import { makeYaschemaApiExpressContext, type YaschemaApiExpressContext } from '../types/YaschemaApiExpressContext.js';
 
-let globalPendingApiRegistrations: Record<string, { api: Api; finalizer: () => void }> = {};
-const globalRegisteredApis = new Set<Api>();
+const globalDefaultExpressContext = makeYaschemaApiExpressContext();
 
 export const detectMissingApiHandlers = ({
   apiRoots,
   logLevel,
   ignoreMissingApisForRouteTypes,
-  ignoreMissingApis
+  ignoreMissingApis,
+  context = globalDefaultExpressContext
 }: {
   apiRoots: any[];
   logLevel: keyof Logger;
   ignoreMissingApisForRouteTypes: string[];
   ignoreMissingApis: Api[];
+  context?: YaschemaApiExpressContext;
 }) => {
   const ignoreMissingApisForRouteTypesSet = new Set(ignoreMissingApisForRouteTypes);
   const ignoreMissingApisSet = new Set(ignoreMissingApis);
@@ -24,7 +26,7 @@ export const detectMissingApiHandlers = ({
   for (const apiRoot of apiRoots) {
     const apis = findAllApisInRoot(apiRoot);
     for (const api of apis) {
-      if (!globalRegisteredApis.has(api)) {
+      if (!context.registeredYaschemaApis.has(api)) {
         if (ignoreMissingApisForRouteTypesSet.has(api.routeType)) {
           continue;
         } else if (ignoreMissingApisSet.has(api)) {
@@ -43,15 +45,17 @@ export const finalizeApiHandlerRegistrations = ({
   detectMissingApiHandlersInApiRoots = [],
   missingApiHandlerLogLevel = 'info',
   ignoreMissingApisForRouteTypes = [],
-  ignoreMissingApis = []
+  ignoreMissingApis = [],
+  context = globalDefaultExpressContext
 }: {
   detectMissingApiHandlersInApiRoots?: any[];
   missingApiHandlerLogLevel?: keyof Logger;
   ignoreMissingApisForRouteTypes?: string[];
   ignoreMissingApis?: Api[];
+  context?: YaschemaApiExpressContext;
 } = {}) => {
-  const pendingApiRegistrations = globalPendingApiRegistrations;
-  globalPendingApiRegistrations = {};
+  const pendingApiRegistrations = context.pendingYaschemaApiRegistrations;
+  context.pendingYaschemaApiRegistrations = {};
 
   const keys = Object.keys(pendingApiRegistrations).sort((a, b) => b.localeCompare(a));
   for (const key of keys) {
@@ -64,26 +68,37 @@ export const finalizeApiHandlerRegistrations = ({
       apiRoots: detectMissingApiHandlersInApiRoots,
       logLevel: missingApiHandlerLogLevel,
       ignoreMissingApisForRouteTypes,
-      ignoreMissingApis
+      ignoreMissingApis,
+      context
     });
   }
 };
 
-export const registerApiHandler = (
-  api: Api,
-  protocol: string,
-  methodName: string | undefined,
-  relativeUrl: string,
-  finalizer: () => void
-) => {
+export const registerApiHandler = ({
+  api,
+  protocol,
+  methodName,
+  relativeUrl,
+  finalizer,
+  context = globalDefaultExpressContext
+}: {
+  api: Api;
+  protocol: string;
+  methodName: string | undefined;
+  relativeUrl: string;
+  finalizer: () => void;
+  context?: YaschemaApiExpressContext;
+}) => {
   // Keeping track of which APIs were registered in case we perform detectMissingApiHandlers later
-  globalRegisteredApis.add(api);
+  context.registeredYaschemaApis.add(api);
 
   // We want:
   // - HTTP to be the lowest-priority protocol
   // - Longer matches to be processed before shorter ones
   // - Literal matches to be processed before patterns
-  globalPendingApiRegistrations[`${protocol.replace(/^http$/g, '!!!!')}~${methodName ?? '!!!!'}~${relativeUrl.replace(/[{}]/g, '!')}`] = {
+  context.pendingYaschemaApiRegistrations[
+    `${protocol.replace(/^http$/g, '!!!!')}~${methodName ?? '!!!!'}~${relativeUrl.replace(/[{}]/g, '!')}`
+  ] = {
     api,
     finalizer
   };
