@@ -1,6 +1,6 @@
 {
   "name": "express-yaschema-api-handler",
-  "version": "4.1.5",
+  "version": "4.1.6",
   "description": "Express handler support for yaschema-api",
   "keywords": [
     "schema",
@@ -35,29 +35,29 @@
   "dependencies": {
     "http-status-codes": "^2.3.0",
     "multer": "^1.4.5-lts.1",
-    "yaschema": "^4.4.0",
-    "yaschema-api": "^4.1.5"
+    "yaschema": "^4.4.1",
+    "yaschema-api": "^4.1.6"
   },
   "devDependencies": {
-    "@eslint/compat": "1.2.5",
+    "@eslint/compat": "1.2.6",
     "@eslint/eslintrc": "3.2.0",
-    "@eslint/js": "9.18.0",
+    "@eslint/js": "9.20.0",
     "@types/body-parser": "^1.19.5",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/multer": "^1.4.12",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
     "body-parser": "^1.20.3",
-    "esbuild": "0.24.2",
+    "esbuild": "0.25.0",
     "esbuild-plugin-tsc": "0.4.0",
-    "eslint": "9.18.0",
+    "eslint": "9.20.1",
     "eslint-config-prettier": "^10.0.1",
-    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-import-resolver-typescript": "^3.8.1",
     "eslint-plugin-file-extension-in-import-ts": "2.1.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "eslint-plugin-prettier": "^5.2.2",
+    "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-tsdoc": "^0.4.0",
     "express": "^4.21.2",
@@ -65,11 +65,11 @@
     "jest": "29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "madge": "8.0.0",
-    "prettier": "3.4.2",
+    "prettier": "3.5.1",
     "trash-cli": "6.0.0",
     "ts-jest": "^29.2.5",
-    "typedoc": "^0.27.6",
+    "typedoc": "^0.27.7",
     "typescript": "5.7.3",
-    "yaschema-api-fetcher": "^5.1.5"
+    "yaschema-api-fetcher": "^5.1.6"
   }
 }
