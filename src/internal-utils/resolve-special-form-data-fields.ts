@@ -9,7 +9,7 @@ export const resolveSpecialFormDataFields = (body: any) => {
     return;
   }
 
-  const bodyObj = body as Record<string, any>;
+  const bodyObj = { ...body } as Record<string, any>;
 
   for (const [key, value] of Object.entries(bodyObj)) {
     if (typeof value === 'string' && value.startsWith(YASCHEMA_JSON_PREFIX)) {
@@ -41,4 +41,6 @@ export const resolveSpecialFormDataFields = (body: any) => {
       }
     }
   }
+
+  return bodyObj;
 };

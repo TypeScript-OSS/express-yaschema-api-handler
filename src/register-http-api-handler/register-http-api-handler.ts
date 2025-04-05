@@ -31,6 +31,7 @@ import { expressHandlersByHttpMethod } from '../internal-consts/express-handlers
 import { convertYaschemaParamSyntaxForExpress } from '../internal-utils/convert-yaschema-param-syntax-for-express.js';
 import { getUrlPathnameUsingRouteType } from '../internal-utils/get-url-pathname.js';
 import { isUnsupportedHttpMethod } from '../internal-utils/is-unsupported-http-method.js';
+import { resolveArrayQueryFields } from '../internal-utils/resolve-array-query-fields.js';
 import { resolveSpecialFormDataFields } from '../internal-utils/resolve-special-form-data-fields.js';
 import { registerApiHandler } from '../register-api-handler/register-api-handler.js';
 import type { HttpApiHandler } from '../types/HttpApiHandler';
@@ -74,16 +75,20 @@ export const registerHttpApiHandler = <
     const express = { req, res, next };
 
     // Form data supports JSON-encoded fields for objects and nested arrays where the JSON fields are prefixed with "yaschema/json:".
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    let serializedBody = req.body;
     if (api.requestType === 'form-data') {
       // In-place substitution of prefixed JSON strings with their resolved values
-      resolveSpecialFormDataFields(req.body);
+      serializedBody = resolveSpecialFormDataFields(serializedBody);
     }
+
+    const serializedReqQuery = resolveArrayQueryFields(req.query);
 
     const [reqHeaders, reqParams, reqQuery, reqBody] = await Promise.all([
       (api.schemas.request.headers ?? anyReqHeadersSchema).deserializeAsync(req.headers, { validation: requestValidationMode }),
       (api.schemas.request.params ?? anyReqParamsSchema).deserializeAsync(req.params, { validation: requestValidationMode }),
-      (api.schemas.request.query ?? anyReqQuerySchema).deserializeAsync(req.query, { validation: requestValidationMode }),
-      (api.schemas.request.body ?? anyReqBodySchema).deserializeAsync(req.body, { validation: requestValidationMode })
+      (api.schemas.request.query ?? anyReqQuerySchema).deserializeAsync(serializedReqQuery, { validation: requestValidationMode }),
+      (api.schemas.request.body ?? anyReqBodySchema).deserializeAsync(serializedBody, { validation: requestValidationMode })
     ]);
 
     if (requestValidationMode !== 'none') {
