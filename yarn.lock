@@ -6126,29 +6126,29 @@ yargs@^17.3.1:
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
 
-yaschema-api-fetcher@^5.1.10:
-  version "5.1.10"
-  resolved "https://registry.yarnpkg.com/yaschema-api-fetcher/-/yaschema-api-fetcher-5.1.10.tgz#587e9767f569ae83bb5a342ab17643ba2b484d70"
-  integrity sha512-pDtAzqaLbkJnlxWRKIq9IgWhAXnUUdqVOiyJLIU+TcIzg/s+O6ERSViZBg1VPw6TXWTSlLLDcX/lBcZc1vicYw==
+yaschema-api-fetcher@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/yaschema-api-fetcher/-/yaschema-api-fetcher-5.2.0.tgz#c0e12918b8c37c08a9b798bd1f0c6b20185ed406"
+  integrity sha512-FMf9OlbYO15IqFP3RPGYNWFYKRr3Tz+2JINmorO7k3uVN9yCvjgTpZcq0+qHgkTEAc+ZMMrOuyuRfcepq/QVWA==
   dependencies:
     is-promise "4.0.0"
     lodash "^4.17.21"
     lodash-es "^4.17.21"
     uuid "11.1.0"
-    yaschema "^4.4.5"
-    yaschema-api "^4.1.10"
+    yaschema "^5.0.0"
+    yaschema-api "^5.0.0"
 
-yaschema-api@^4.1.10:
-  version "4.1.10"
-  resolved "https://registry.yarnpkg.com/yaschema-api/-/yaschema-api-4.1.10.tgz#ee340fbd5f5081fba38fa12851c36e4aea365782"
-  integrity sha512-631/mFeuvXIVmyRKUOlU6YJuARpIAluIhbdnQlHllMX3yR/m6qfkQzKbjq8dlRKYnhSOmVWv7SBlEqqXkcJ1qA==
+yaschema-api@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/yaschema-api/-/yaschema-api-5.0.0.tgz#6fb0ee3df3a0a72187cc1c39c22674b64d97a03b"
+  integrity sha512-70t82Fyv1wjWvGKZso0lwKGhCO9HeZzYaEX+WguHkf9MFKyH12HqRZQrnDfM1Y7Wb15C9xdBn20T+z/8woFffw==
   dependencies:
-    yaschema "^4.4.5"
+    yaschema "^5.0.0"
 
-yaschema@^4.4.5:
-  version "4.4.5"
-  resolved "https://registry.yarnpkg.com/yaschema/-/yaschema-4.4.5.tgz#de1158fa67c13722349949723d996472012710a6"
-  integrity sha512-n4EFcNMGSZwo9/pTG1/lzRSclV0LzNkKFnab+z9voPBIVXjZd/bwFM6Nz3XlhDeb/p9tWXEepvJ9ceLrjYQo9Q==
+yaschema@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/yaschema/-/yaschema-5.0.0.tgz#c4f19a190a1c6b7fe513ba92ee547b56cd7e9673"
+  integrity sha512-DTv95Tqd9KaOFSL4VKsiextRbcJYTLIl1Brd5IYryBx3ooFFxEm3xQugtfFcCVDyfP73TxnwrZW2KK+fObTt6Q==
   dependencies:
     is-promise "4.0.0"
     lodash "^4.17.21"
