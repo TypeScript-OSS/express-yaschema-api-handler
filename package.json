@@ -1,6 +1,6 @@
 {
   "name": "express-yaschema-api-handler",
-  "version": "4.2.2",
+  "version": "4.2.3",
   "description": "Express handler support for yaschema-api",
   "keywords": [
     "schema",
@@ -24,7 +24,7 @@
     "build": "tsc -p tsconfig.cjs.json && node ./build.mjs",
     "build:dev": "trash dev-build && yarn build && mkdir dev-build && cp -r lib dev-build && cp package.json dev-build && (cd dev-build && echo 'package' `pwd`)",
     "clean": "trash coverage dev-build docs lib",
-    "generate:docs": "npx typedoc src/exports.ts --out docs --skipErrorChecking",
+    "generate:docs": "npx typedoc src/exports.ts --out docs --skipErrorChecking --ignoredHighlightLanguages http",
     "lint": "eslint 'src/**/*.ts?(x)' --max-warnings 0",
     "prepublishOnly": "yarn clean && yarn test && yarn lint && yarn test:audit && yarn clean && yarn build && yarn generate:docs",
     "test": "yarn test:check-circular-dependencies && yarn test:unit-tests",
